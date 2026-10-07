@@ -13,5 +13,5 @@ mkdir -p "$ASDF_DOWNLOAD_PATH"
 release_file="$ASDF_DOWNLOAD_PATH/d2-v${ASDF_INSTALL_VERSION}-$(get_platform)-$(get_arch).tar.gz"
 download_release "$ASDF_INSTALL_VERSION" "$release_file"
 tar -xzf "$release_file" -C "$ASDF_DOWNLOAD_PATH" \
-	"d2-v${ASDF_INSTALL_VERSION}/bin/d2" || fail "Could not extract D2 from $release_file"
+	"d2-v${ASDF_INSTALL_VERSION}" || fail "Could not extract D2 from $release_file"
 rm "$release_file"

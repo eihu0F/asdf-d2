@@ -27,17 +27,17 @@ list_all_versions() {
 
 get_platform() {
 	case "$(uname -s)" in
-		Darwin) printf '%s\n' macos ;;
-		Linux) printf '%s\n' linux ;;
-		*) fail "Unsupported operating system: $(uname -s)" ;;
+	Darwin) printf '%s\n' macos ;;
+	Linux) printf '%s\n' linux ;;
+	*) fail "Unsupported operating system: $(uname -s)" ;;
 	esac
 }
 
 get_arch() {
 	case "$(uname -m)" in
-		x86_64 | amd64) printf '%s\n' amd64 ;;
-		aarch64 | arm64) printf '%s\n' arm64 ;;
-		*) fail "Unsupported architecture: $(uname -m)" ;;
+	x86_64 | amd64) printf '%s\n' amd64 ;;
+	aarch64 | arm64) printf '%s\n' arm64 ;;
+	*) fail "Unsupported architecture: $(uname -m)" ;;
 	esac
 }
 
@@ -55,15 +55,14 @@ install_version() {
 	local install_type="$1"
 	local version="$2"
 	local install_path="$3"
-	local d2_binary="$ASDF_DOWNLOAD_PATH/d2-v${version}/bin/d2"
+	local release_dir="$ASDF_DOWNLOAD_PATH/d2-v${version}"
 
 	if [ "$install_type" != "version" ]; then
 		fail "asdf-d2 supports release installs only"
 	fi
 
-	test -x "$d2_binary" || fail "Expected executable $d2_binary was not found"
-	mkdir -p "$install_path/bin"
-	cp "$d2_binary" "$install_path/bin/d2"
-	chmod +x "$install_path/bin/d2"
+	test -x "$release_dir/bin/d2" || fail "Expected executable $release_dir/bin/d2 was not found"
+	test -f "$release_dir/Makefile" || fail "Expected Makefile in $release_dir was not found"
+	make -sC "$release_dir" install PREFIX="$install_path" || fail "Could not install D2 $version"
 	echo "D2 $version installation was successful!"
 }

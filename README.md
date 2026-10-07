@@ -4,7 +4,7 @@
 
 ## Requirements
 
-- `git`, `curl`, and `tar`
+- `git`, `curl`, `tar`, and `make`
 - Linux or macOS on `amd64` or `arm64`
 
 ## Installation
