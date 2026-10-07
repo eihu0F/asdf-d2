@@ -9,6 +9,15 @@ shfmt --language-dialect bash --diff \
 	setup.bash \
 	scripts/*
 
+# lint the D2 plugin
+shellcheck --shell=bash --external-sources \
+	bin/* --source-path=SCRIPTDIR \
+	lib/*
+
+shfmt --language-dialect bash --diff \
+	bin/* \
+	lib/*
+
 # lint the template/
 shellcheck --shell=bash --external-sources \
 	template/bin/* --source-path=template/lib/ \

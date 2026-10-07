@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+current_script_path=${BASH_SOURCE[0]}
+plugin_dir=$(dirname "$(dirname "$current_script_path")")
+
+# shellcheck source=../lib/utils.bash
+source "${plugin_dir}/lib/utils.bash"
+
+curl_opts=(-fsSI)
+if [ -n "${GITHUB_API_TOKEN:-}" ]; then
+	curl_opts+=(-H "Authorization: token $GITHUB_API_TOKEN")
+fi
+
+redirect_url=$(curl "${curl_opts[@]}" "$GH_REPO/releases/latest" |
+	awk 'tolower($1) == "location:" { gsub("\r", "", $2); url = $2 } END { print url }')
+version=$(printf '%s\n' "$redirect_url" | sed -nE 's|.*/releases/tag/v?([0-9][^/]*)$|\1|p')
+
+if [ -z "$version" ]; then
+	fail "Could not determine the latest stable D2 release"
+fi
+
+printf '%s\n' "$version"
